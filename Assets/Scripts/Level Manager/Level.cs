@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PathCreation;
 using PathCreation.Examples;
 using UnityEditor;
@@ -8,16 +9,13 @@ namespace ButchersGames
     public class Level : MonoBehaviour
     {
         [SerializeField] private Transform playerSpawnPoint;
-        [SerializeField] private GameObject _roadMesh;
-        [SerializeField] private RoadMeshCreator _pathCreator;
+        [SerializeField] private PathCreator _pathCreator;
+        [SerializeField] private List<Transform> _wayPoints;
+        
 
-        public void UpdateRoad()
-        {
-            //_roadMesh.gameObject.SetActive(false);
-            //_roadMesh.gameObject.SetActive(true);
-            //Selection.SetActiveObjectWithContext(_roadMesh, t);
-        }
-
+        public Transform PlayerSpawnPoint => playerSpawnPoint;
+        public PathCreator PathCreator => _pathCreator; 
+        public List<Transform> WayPoints => _wayPoints;
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

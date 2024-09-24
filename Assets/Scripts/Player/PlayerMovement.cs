@@ -8,6 +8,8 @@ namespace Player
     {
         [SerializeField] private Transform _playerTransform;
         [SerializeField] private float _sideMultiplier;
+
+        public Transform PlayertTransform => _playerTransform;
         private void Update()
         {
             if (Input.GetMouseButton(0))

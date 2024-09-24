@@ -3,6 +3,9 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.Linq;
+using Camera;
+using PathCreation.Examples;
+using Player;
 
 namespace ButchersGames
 {
@@ -28,6 +31,8 @@ namespace ButchersGames
         [SerializeField] bool editorMode = false;
         [SerializeField] LevelsList levels;
         public List<Level> Levels => levels.lvls;
+
+        private Level _currentLevel;
 
         public event Action OnLevelStarted;
 
@@ -118,26 +123,24 @@ namespace ButchersGames
 
         private void SelLevelParams(Level level)
         {
-            Level currentLevel;
             if (level)
             {
                 ClearChilds();
 #if UNITY_EDITOR
             if (Application.isPlaying)
             {
-                Instantiate(level, transform).TryGetComponent(out currentLevel);
-                currentLevel.UpdateRoad();
+                Instantiate(level, transform).TryGetComponent(out _currentLevel);
+                
             }
             else
             {
                 var currentLevelObject = PrefabUtility.InstantiatePrefab(level, transform);
-                ((GameObject) currentLevelObject).TryGetComponent(out currentLevel);
-                currentLevel.UpdateRoad();
+                ((GameObject) currentLevelObject).TryGetComponent(out _currentLevel);
+                
             }
 #else         
                 
-                Instantiate(level, transform).TryGetComponent(out tempLevel);
-                currentLevel.UpdateRoad();
+                Instantiate(level, transform).TryGetComponent(out _currentLevel);
                 
 #endif
                 
@@ -153,6 +156,16 @@ namespace ButchersGames
                 GameObject destroyObject = transform.GetChild(i).gameObject;
                 DestroyImmediate(destroyObject);
             }
+        }
+
+        public GameObject CreatePlayer(GameObject playerGO,CameraFollow cameraFollow)
+        {
+            GameObject player = Instantiate(playerGO, _currentLevel.PlayerSpawnPoint);
+            player.TryGetComponent(out PathFollower pathFollower);
+            player.TryGetComponent(out PlayerMovement playerMovement);
+            cameraFollow.SetPlayerTransfrom(playerMovement.PlayertTransform);
+            pathFollower.pathCreator = _currentLevel.PathCreator;
+            return player;
         }
     }
 }

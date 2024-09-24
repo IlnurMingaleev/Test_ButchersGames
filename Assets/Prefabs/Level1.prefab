@@ -132,8 +132,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpawnPoint: {fileID: 2802390158560717340}
-  _roadMesh: {fileID: 4493482354405234395}
-  _pathCreator: {fileID: 8627213553348352862}
+  _pathCreator: {fileID: 7014919422356482930}
+  _wayPoints: []
 --- !u!1 &4493482354405234395
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,11 +182,8 @@ MonoBehaviour:
   editorData:
     _bezierPath:
       points:
-      - {x: 0, y: 0, z: -10}
-      - {x: 0, y: 0, z: -1.6610188}
-      - {x: 0, y: 0, z: 6.6779623}
       - {x: 0, y: 0, z: 15.658403}
-      - {x: 0, y: 0, z: 15.690906}
+      - {x: 0, y: 0, z: 15.688583}
       - {x: 0, y: 0, z: 15.718764}
       - {x: 0, y: 0, z: 15.7512665}
       - {x: 0, y: 0, z: 27.738323}
@@ -219,7 +216,6 @@ MonoBehaviour:
         m_Center: {x: 1.2616136, y: 0.54719853, z: -2.224142}
         m_Extent: {x: 3.2442577, y: 0.8264315, z: 3.3909774}
       perAnchorNormalsAngle:
-      - 0
       - 0
       - 0
       - 0
@@ -331,7 +327,7 @@ Transform:
   m_GameObject: {fileID: 8565703932541241061}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 15.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
