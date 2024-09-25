@@ -1,6 +1,7 @@
 ﻿using System;
 using ButchersGames;
 using Camera;
+using UnityEditor;
 using UnityEngine;
 
 namespace Infrustructure
@@ -9,12 +10,13 @@ namespace Infrustructure
     {
         [SerializeField] private LevelManager _levelManager;
         [SerializeField] private GameObject _playerGO;
-        [SerializeField] private CameraFollow _cameraFollow; 
-        
-        private void Start()
+        [SerializeField] private CameraFollow _cameraFollow;
+        private GameObject _currentPlayer;
+
+        public void StartOnButtonClick()
         {
             _levelManager.Init();
-            _levelManager.CreatePlayer(_playerGO, _cameraFollow);
+            _currentPlayer =  _levelManager.CreatePlayer(_playerGO, _cameraFollow);
         }
     }
 }

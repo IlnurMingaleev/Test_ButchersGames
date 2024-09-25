@@ -16,6 +16,11 @@ namespace ButchersGames
         public Transform PlayerSpawnPoint => playerSpawnPoint;
         public PathCreator PathCreator => _pathCreator; 
         public List<Transform> WayPoints => _wayPoints;
+
+        private void Start()
+        {
+            Selection.activeObject = _pathCreator.gameObject;
+        }
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

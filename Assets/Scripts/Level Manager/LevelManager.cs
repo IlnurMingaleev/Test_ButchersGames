@@ -36,6 +36,7 @@ namespace ButchersGames
 
         public event Action OnLevelStarted;
 
+        public GameObject CurrentPlayer;
 
         public void Init()
         {
@@ -165,6 +166,7 @@ namespace ButchersGames
             player.TryGetComponent(out PlayerMovement playerMovement);
             cameraFollow.SetPlayerTransfrom(playerMovement.PlayertTransform);
             pathFollower.pathCreator = _currentLevel.PathCreator;
+            CurrentPlayer = player;
             return player;
         }
     }
