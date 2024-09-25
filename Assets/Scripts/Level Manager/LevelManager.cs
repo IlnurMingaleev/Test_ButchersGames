@@ -6,6 +6,7 @@ using System.Linq;
 using Camera;
 using PathCreation.Examples;
 using Player;
+using UnityEngine.Serialization;
 
 namespace ButchersGames
 {
@@ -32,7 +33,7 @@ namespace ButchersGames
         [SerializeField] LevelsList levels;
         public List<Level> Levels => levels.lvls;
 
-        private Level _currentLevel;
+        public Level CurrentLevelInstance;
 
         public event Action OnLevelStarted;
 
@@ -130,18 +131,18 @@ namespace ButchersGames
 #if UNITY_EDITOR
             if (Application.isPlaying)
             {
-                Instantiate(level, transform).TryGetComponent(out _currentLevel);
+                Instantiate(level, transform).TryGetComponent(out CurrentLevelInstance);
                 
             }
             else
             {
                 var currentLevelObject = PrefabUtility.InstantiatePrefab(level, transform);
-                ((GameObject) currentLevelObject).TryGetComponent(out _currentLevel);
+                ((GameObject) currentLevelObject).TryGetComponent(out CurrentLevelInstance);
                 
             }
 #else         
                 
-                Instantiate(level, transform).TryGetComponent(out _currentLevel);
+                Instantiate(level, transform).TryGetComponent(out CurrentLevelInstance);
                 
 #endif
                 
@@ -161,11 +162,11 @@ namespace ButchersGames
 
         public GameObject CreatePlayer(GameObject playerGO,CameraFollow cameraFollow)
         {
-            GameObject player = Instantiate(playerGO, _currentLevel.PlayerSpawnPoint);
+            GameObject player = Instantiate(playerGO, CurrentLevelInstance.PlayerSpawnPoint);
             player.TryGetComponent(out PathFollower pathFollower);
             player.TryGetComponent(out PlayerMovement playerMovement);
             cameraFollow.SetPlayerTransfrom(playerMovement.PlayertTransform);
-            pathFollower.pathCreator = _currentLevel.PathCreator;
+            pathFollower.pathCreator = CurrentLevelInstance.PathCreator;
             CurrentPlayer = player;
             return player;
         }

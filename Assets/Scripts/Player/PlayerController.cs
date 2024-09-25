@@ -17,7 +17,7 @@ namespace Player
     {
         [SerializeField] private Slider _moneySlider;
 
-        private ReactiveProperty<int> _moneyCount = new ReactiveProperty<int>();
+        private ReactiveProperty<int> _moneyCount = new ReactiveProperty<int>(5);
         private CompositeDisposable _compositeDisposable = new CompositeDisposable();
         private float _maxMoneyValue = 50;
         public IReadOnlyReactiveProperty<int> MoneyCount => _moneyCount;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DefaultNamespace;
 using PathCreation;
 using PathCreation.Examples;
 using UnityEditor;
@@ -11,6 +12,7 @@ namespace ButchersGames
         [SerializeField] private Transform playerSpawnPoint;
         [SerializeField] private PathCreator _pathCreator;
         [SerializeField] private List<Transform> _wayPoints;
+        public EndOfPath EndOfPath;
         
 
         public Transform PlayerSpawnPoint => playerSpawnPoint;
@@ -21,6 +23,7 @@ namespace ButchersGames
         {
             Selection.activeObject = _pathCreator.gameObject;
         }
+        
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {

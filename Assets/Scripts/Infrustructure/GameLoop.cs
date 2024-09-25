@@ -1,6 +1,8 @@
-﻿using ButchersGames;
+﻿using System;
+using ButchersGames;
 using Camera;
 using Enums;
+using PathCreation.Examples;
 using Player;
 using UI;
 using UniRx;
@@ -17,9 +19,9 @@ namespace Infrustructure
         [SerializeField] private GameObject _environmentGO;
         
         //UI
-        [FormerlySerializedAs("_loseePanel")] [SerializeField] private LoosePanelBase loseePanelBase;
-        [FormerlySerializedAs("_winPanel")] [SerializeField] private WinPanelBase winPanelBase;
-        [FormerlySerializedAs("_mainMenuPanel")] [SerializeField] private MainMenuPanelBase mainMenuPanelBase;
+        [SerializeField] private LoosePanelBase loseePanelBase;
+        [SerializeField] private WinPanelBase winPanelBase;
+        [SerializeField] private MainMenuPanelBase mainMenuPanelBase;
         private GameObject _currentPlayer;
 
         
@@ -27,13 +29,60 @@ namespace Infrustructure
         public void StartOnButtonClick()
         {
             
+            OnDisable();
             _levelManager.Init();
+            _levelManager.CurrentLevelInstance.EndOfPath.EndGameEvent += GameOver;
             _currentPlayer =  _levelManager.CreatePlayer(_playerGO, _cameraFollow);
             _environmentGO.SetActive(false);
             _currentPlayer.TryGetComponent(out PlayerController playerController);
             playerController.EndGameEvent += GameOver;
+            mainMenuPanelBase.Close();
+            SubscribeOnEvents();
+            InitPanels();
         }
-        
+
+        public void InitPanels()
+        {
+            loseePanelBase.Close();
+            winPanelBase.Close();
+            mainMenuPanelBase.Close();
+
+            SubscribeOnEvents();
+        }
+
+        private void SubscribeOnEvents()
+        {
+            loseePanelBase.OnExitEvent += Exit;
+            loseePanelBase.OnRestartEvent += Restart;
+
+            winPanelBase.OnExitEvent += Exit;
+            winPanelBase.OnContinueEvent += Continue;
+        }
+
+        private void Continue()
+        {
+            winPanelBase.Close();
+            _levelManager.NextLevel();
+            StartOnButtonClick();
+        }
+
+        private void Restart()
+        {
+            loseePanelBase.Close();
+            StartOnButtonClick();
+        }
+
+        private void Exit()
+        {
+            loseePanelBase.Close();
+            winPanelBase.Close();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else            
+            Application.Quit();
+#endif
+        }
+
         private void GameOver(GameEndEnum gameEndEnum)
         {
             switch (gameEndEnum)
@@ -48,12 +97,32 @@ namespace Infrustructure
         }
         private void Loose()
         {
-            
+            loseePanelBase.Open();
+            _currentPlayer.TryGetComponent(out PathFollower pathFollower);
+            _currentPlayer.TryGetComponent(out PlayerAnimator playerAnimator);
+            playerAnimator.SetWalk(false);
+            pathFollower.enabled = false;
         }
 
         private void Win()
         {
+            winPanelBase.Open();
+            _currentPlayer.TryGetComponent(out PathFollower pathFollower);
+            _currentPlayer.TryGetComponent(out PlayerAnimator playerAnimator);
+            pathFollower.enabled = false;
+            playerAnimator.SetWalk(false);
+            playerAnimator.TriggerDance();
+        }
+
+        private void OnDisable()
+        {
+            if(_levelManager.CurrentLevelInstance!= null)_levelManager.CurrentLevelInstance.EndOfPath.EndGameEvent -= GameOver;
             
+            loseePanelBase.OnExitEvent -= Exit;
+            loseePanelBase.OnRestartEvent -= Restart;
+
+            winPanelBase.OnExitEvent -= Exit;
+            winPanelBase.OnContinueEvent -= Continue;
         }
     }
 }
