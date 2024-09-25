@@ -6,13 +6,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public interface IPanel
-    {
-        void Open();
-        void Close();
-    }
-
-    public class MainMenuPanel:MonoBehaviour, IPanel
+    public class MainMenuPanelBase:PanelBase
     {
         [SerializeField] private Image _palmImage;
         [SerializeField] private Vector2 _minPosition;
@@ -41,14 +35,6 @@ namespace UI
             });
         }
 
-        public void Open()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void Close()
-        {
-            gameObject.SetActive(false);
-        }
+       
     }
 }
