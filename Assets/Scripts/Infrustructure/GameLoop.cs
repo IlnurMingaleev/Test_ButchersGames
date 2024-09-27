@@ -1,81 +1,114 @@
 ﻿using System;
 using ButchersGames;
-using Camera;
-using Enums;
-using PathCreation.Examples;
+using PickUps;
 using Player;
+using Runer;
 using UI;
 using UniRx;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Infrustructure
 {
-    public class GameLoop:MonoBehaviour
+    public enum GameEndType
+    {
+        None = 0,
+        Loosed = 1,
+        Won = 2,
+    }
+
+
+    public interface IGameStateChangeable
+    {
+        void StartGame();
+        void GameOver(GameEndType gameEndType);
+        IReadOnlyReactiveProperty<GameEndType> GameEndStateType { get; }
+    }
+
+    public class GameLoop:MonoBehaviour,IGameStateChangeable
     {
         [SerializeField] private LevelManager _levelManager;
         [SerializeField] private GameObject _playerGO;
         [SerializeField] private CameraFollow _cameraFollow;
         [SerializeField] private GameObject _environmentGO;
         
-        //UI
-        [SerializeField] private LoosePanelBase loseePanelBase;
-        [SerializeField] private WinPanelBase winPanelBase;
-        [SerializeField] private MainMenuPanelBase mainMenuPanelBase;
-        private GameObject _currentPlayer;
 
+        [SerializeField] private Transform _windowRoot;
+        [SerializeField] private Transform _nonActiveParent;
         
+        private ReactiveProperty<GameEndType> _gameEndStateType = new ReactiveProperty<GameEndType>();
+        private IWindowManager _windowManager;
+        private PlayerController _playerController;
+        private Camera _mainCamera;
 
-        public void StartOnButtonClick()
+        public IReadOnlyReactiveProperty<GameEndType> GameEndStateType => _gameEndStateType;
+
+        private void Awake()
+        {
+            _mainCamera = Camera.main;
+            _windowManager = new WindowManager(_windowRoot, _nonActiveParent);
+        }
+
+        private void Start()
+        {
+            _windowManager.GetWindow<MainMenuPanel>().Init(_windowManager,this);
+            _windowManager.Open<MainMenuPanel>();
+        }
+
+        public void StartGame()
         {
             
-            OnDisable();
-            _levelManager.Init();
-            _levelManager.CurrentLevelInstance.EndOfPath.EndGameEvent += GameOver;
-            _currentPlayer =  _levelManager.CreatePlayer(_playerGO, _cameraFollow);
+            _levelManager.RestartLevel();
+            
+            _playerController =  _levelManager.CreatePlayer(_playerGO, _cameraFollow);
+            _playerController.Init(_windowManager,this);
+            _playerController.Wallet.MoneyCount.Subscribe((_) => HandleMoneyValueChange(_));
+            
+            _windowManager.GetWindow<PlayerPanel>().Init(_windowManager, _playerController.GetComponentInChildren<PlayerTag>(), _mainCamera);
+            _windowManager.Open<PlayerPanel>();
+                
             _environmentGO.SetActive(false);
-            _currentPlayer.TryGetComponent(out PlayerController playerController);
-            playerController.EndGameEvent += GameOver;
-            mainMenuPanelBase.Close();
-            SubscribeOnEvents();
+            _windowManager.Close<MainMenuPanel>();
             InitPanels();
         }
 
         public void InitPanels()
         {
-            loseePanelBase.Close();
-            winPanelBase.Close();
-            mainMenuPanelBase.Close();
+            _windowManager.CloseSelected(new Type[]
+            {
+                typeof(MainMenuPanel),
+                typeof(WinPanel),
+                typeof(LoosePanel),
+            });
 
             SubscribeOnEvents();
         }
 
         private void SubscribeOnEvents()
         {
-            loseePanelBase.OnExitEvent += Exit;
-            loseePanelBase.OnRestartEvent += Restart;
-
-            winPanelBase.OnExitEvent += Exit;
-            winPanelBase.OnContinueEvent += Continue;
+            _windowManager.GetWindow<LoosePanel>().Init(Restart,Exit, _windowManager);
+            _windowManager.GetWindow<WinPanel>().Init(Continue,Exit, _windowManager);
+        }
+        private void HandleMoneyValueChange(int value)
+        {
+            if (value == 0) GameOver(GameEndType.Loosed);
         }
 
         private void Continue()
         {
-            winPanelBase.Close();
+            _windowManager.Close<WinPanel>();
             _levelManager.NextLevel();
-            StartOnButtonClick();
+            StartGame();
         }
 
         private void Restart()
         {
-            loseePanelBase.Close();
-            StartOnButtonClick();
+            _windowManager.Close<LoosePanel>();
+            StartGame();
         }
 
         private void Exit()
         {
-            loseePanelBase.Close();
-            winPanelBase.Close();
+            _windowManager.CloseAll();
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else            
@@ -83,46 +116,33 @@ namespace Infrustructure
 #endif
         }
 
-        private void GameOver(GameEndEnum gameEndEnum)
+        public void GameOver(GameEndType gameEndType)
         {
-            switch (gameEndEnum)
+            SetEndLevelStateForPlayer();
+            switch (gameEndType)
             {
-                case Enums.GameEndEnum.Loosed:
-                    Loose();
-                    break;
-                case Enums.GameEndEnum.Won: 
-                    Win();
-                    break;
+                case GameEndType.Loosed: Loose(); break;
+                case GameEndType.Won: Win(); break;
             }
         }
+
+        private void SetEndLevelStateForPlayer()
+        {
+            _windowManager.Close<PlayerPanel>();
+            _playerController.Animator.SetWalk(false);
+            _playerController.PathFollower.enabled = false;
+        }
+
         private void Loose()
         {
-            loseePanelBase.Open();
-            _currentPlayer.TryGetComponent(out PathFollower pathFollower);
-            _currentPlayer.TryGetComponent(out PlayerAnimator playerAnimator);
-            playerAnimator.SetWalk(false);
-            pathFollower.enabled = false;
+            _windowManager.Open<LoosePanel>();
         }
 
         private void Win()
         {
-            winPanelBase.Open();
-            _currentPlayer.TryGetComponent(out PathFollower pathFollower);
-            _currentPlayer.TryGetComponent(out PlayerAnimator playerAnimator);
-            pathFollower.enabled = false;
-            playerAnimator.SetWalk(false);
-            playerAnimator.TriggerDance();
+            _windowManager.Open<WinPanel>();
+            _playerController.Animator.TriggerDance();
         }
-
-        private void OnDisable()
-        {
-            if(_levelManager.CurrentLevelInstance!= null)_levelManager.CurrentLevelInstance.EndOfPath.EndGameEvent -= GameOver;
-            
-            loseePanelBase.OnExitEvent -= Exit;
-            loseePanelBase.OnRestartEvent -= Restart;
-
-            winPanelBase.OnExitEvent -= Exit;
-            winPanelBase.OnContinueEvent -= Continue;
-        }
+        
     }
 }

@@ -3,10 +3,8 @@ using UnityEditor;
 using UnityEngine;
 using System;
 using System.Linq;
-using Camera;
-using PathCreation.Examples;
 using Player;
-using UnityEngine.Serialization;
+using Runer;
 
 namespace ButchersGames
 {
@@ -160,15 +158,14 @@ namespace ButchersGames
             }
         }
 
-        public GameObject CreatePlayer(GameObject playerGO,CameraFollow cameraFollow)
+        public PlayerController CreatePlayer(GameObject playerPrefab,CameraFollow cameraFollow)
         {
-            GameObject player = Instantiate(playerGO, CurrentLevelInstance.PlayerSpawnPoint);
-            player.TryGetComponent(out PathFollower pathFollower);
-            player.TryGetComponent(out PlayerMovement playerMovement);
-            cameraFollow.SetPlayerTransfrom(playerMovement.PlayertTransform);
-            pathFollower.pathCreator = CurrentLevelInstance.PathCreator;
-            CurrentPlayer = player;
-            return player;
+            GameObject playerGO = Instantiate(playerPrefab, CurrentLevelInstance.PlayerSpawnPoint);
+            var playerController = playerGO.GetComponent<PlayerController>();
+            cameraFollow.SetPlayerTransfrom(playerController.Movement.PlayertTransform);
+            playerController.PathFollower.pathCreator = CurrentLevelInstance.PathCreator;
+            CurrentPlayer = playerGO;
+            return playerController;
         }
     }
 }

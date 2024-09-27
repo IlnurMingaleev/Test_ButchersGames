@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Camera
+namespace Runer
 {
     public class CameraFollow:MonoBehaviour
     {

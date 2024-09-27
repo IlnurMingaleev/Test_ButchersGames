@@ -9,7 +9,14 @@ namespace Player
         [SerializeField] private Transform _playerTransform;
         [SerializeField] private float _sideMultiplier;
 
+        private float halfScreen;
         public Transform PlayertTransform => _playerTransform;
+
+        private void Awake()
+        {
+            halfScreen = Screen.height / 2;
+        }
+
         private void Update()
         {
             if (Input.GetMouseButton(0))
@@ -20,7 +27,6 @@ namespace Player
 
         private void MovePlayer()
         {
-            float halfScreen = Screen.width / 2;
             float xPosition = (Input.mousePosition.x - halfScreen) / halfScreen;
             xPosition *= _sideMultiplier;
             xPosition = Math.Clamp(xPosition, -_sideMultiplier, _sideMultiplier);
