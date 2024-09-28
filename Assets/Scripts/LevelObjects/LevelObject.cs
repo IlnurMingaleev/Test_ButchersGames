@@ -14,15 +14,17 @@ namespace PickUps
     {
         [SerializeField] protected int _amount = 10;
         [SerializeField] private LevelObjectType levelObjectType;
+
+        public LevelObjectType LevelObjectType => levelObjectType;
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out PlayerTag playerTag))
             {
                 PlayerController playerController = playerTag.transform.parent.GetComponent<PlayerController>();
                 RecountBalance(playerController);
+                gameObject.SetActive(false);
             }
-            //TODO use object pool
-            Destroy(gameObject);
+            
         }
 
         private void RecountBalance(PlayerController playerController)

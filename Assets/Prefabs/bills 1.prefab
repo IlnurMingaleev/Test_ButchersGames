@@ -102,4 +102,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _amount: 5
-  _pickUpType: 2
+  levelObjectType: 2

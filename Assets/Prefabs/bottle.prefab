@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _amount: 5
-  _pickUpType: 1
+  levelObjectType: 1
 --- !u!65 &-1598013705916921675
 BoxCollider:
   m_ObjectHideFlags: 0

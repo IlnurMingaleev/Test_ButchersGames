@@ -30,6 +30,7 @@ namespace Infrustructure
         [SerializeField] private GameObject _playerGO;
         [SerializeField] private CameraFollow _cameraFollow;
         [SerializeField] private GameObject _environmentGO;
+        [SerializeField] private LevelObjectsSpawnController _levelObjectsSpawnController;
         
 
         [SerializeField] private Transform _windowRoot;
@@ -52,6 +53,7 @@ namespace Infrustructure
         {
             _windowManager.GetWindow<MainMenuPanel>().Init(_windowManager,this);
             _windowManager.Open<MainMenuPanel>();
+            _levelObjectsSpawnController.SpawnAllLevelObjectsInFrustrum();
         }
 
         public void StartGame()
