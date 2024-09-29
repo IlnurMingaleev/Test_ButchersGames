@@ -1,10 +1,16 @@
 {
-    "name": "PathCreatorEditor",
+    "name": "PathCreator",
     "rootNamespace": "",
     "references": [
-        "GUID:29c3ac0fc6a24591b03744256aeb2658"
+        "GUID:1dab4670d1ed4b4a8306238205d61051",
+        "GUID:29c3ac0fc6a24591b03744256aeb2658",
+        "GUID:3e1a9c0182d54ac29f8f6a48e92e5158"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "WebGL"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

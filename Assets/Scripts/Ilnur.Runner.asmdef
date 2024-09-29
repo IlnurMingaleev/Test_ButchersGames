@@ -1,0 +1,25 @@
+{
+    "name": "Ilnur.Runner",
+    "rootNamespace": "",
+    "references": [
+        "GUID:560b04d1a97f54a4e82edc0cbbb69285",
+        "GUID:71799519d12379b49b6b53aea974bea5",
+        "GUID:709d71a0bbacfa5499d5cb5d025fe0cb",
+        "GUID:a3ffbb4497ee4d8b80e4f5e133468dd2",
+        "GUID:3e1a9c0182d54ac29f8f6a48e92e5158",
+        "GUID:29c3ac0fc6a24591b03744256aeb2658"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor",
+        "WebGL"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

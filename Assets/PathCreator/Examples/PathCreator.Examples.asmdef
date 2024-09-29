@@ -1,5 +1,5 @@
 {
-    "name": "PathCreatorEditor",
+    "name": "PathCreator.Examples",
     "rootNamespace": "",
     "references": [
         "GUID:29c3ac0fc6a24591b03744256aeb2658"

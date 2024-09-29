@@ -268,13 +268,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef5fe4b1db4241c79381d205f80c67bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelManager: {fileID: 209555614}
-  _playerGO: {fileID: 7293289853878157351, guid: 6bbc78b159e9d5343a58a4ac536760ad, type: 3}
-  _cameraFollow: {fileID: 1349698979}
-  _environmentGO: {fileID: 6920744583169720093}
-  _levelObjectsSpawnController: {fileID: 739970097}
-  _windowRoot: {fileID: 10486625}
-  _nonActiveParent: {fileID: 1559626286}
+  levelManager: {fileID: 209555614}
+  playerGo: {fileID: 7293289853878157351, guid: 6bbc78b159e9d5343a58a4ac536760ad, type: 3}
+  cameraFollow: {fileID: 1349698979}
+  environmentGo: {fileID: 6920744583169720093}
+  levelObjectsSpawnController: {fileID: 739970097}
+  windowRoot: {fileID: 10486625}
+  nonActiveParent: {fileID: 1559626286}
 --- !u!1 &95918184
 GameObject:
   m_ObjectHideFlags: 0
@@ -1373,7 +1373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8931146ed74067804aca98846024ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelObjects:
+  levelObjects:
   - {fileID: 1872683579}
   - {fileID: 1329306926}
   - {fileID: 553854927}
@@ -1422,7 +1422,7 @@ MonoBehaviour:
   - {fileID: 261548295}
   - {fileID: 95918186}
   - {fileID: 608279785}
-  _configManager: {fileID: 345930816}
+  configManager: {fileID: 345930816}
 --- !u!1 &786041777
 GameObject:
   m_ObjectHideFlags: 0
